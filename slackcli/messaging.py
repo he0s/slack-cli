@@ -28,9 +28,9 @@ def iter_resources():
     # https://api.slack.com/methods/conversations.list
     # https://github.com/os/slacker/issues/116
     fetchers = [
-        ("channel", lambda: slack.client().channels.list().body["channels"]),
-        ("group", lambda: slack.client().groups.list().body["groups"]),
-        ("user", lambda: slack.client().users.list().body["members"]),
+        ("channel", lambda: slack.client().conversations.list().body["channels"]),
+        # ("group", lambda: slack.client().conversations.list().body["groups"]),
+        # ("user", lambda: slack.client().conversations.list().body["members"]),
     ]
     for resource_type, fetcher in fetchers:
         for resource in fetcher():
@@ -49,7 +49,7 @@ def print_messages(source_name, count=20):
         # In case of conversation with a user, we need to find the corresponding IM object
         resource = [
             i
-            for i in slack.client().im.list().body["ims"]
+            for i in slack.client().conversations.list().body["ims"]
             if i["user"] == resource["id"]
         ][0]
         method_name = "im"
